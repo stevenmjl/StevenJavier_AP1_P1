@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using StevenJavier_AP1_P1.Components;
 using StevenJavier_AP1_P1.DAL;
+using StevenJavier_AP1_P1.Migrations;
+using StevenJavier_AP1_P1.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,7 @@ builder.Services.AddRazorComponents()
 
 var ConStr = builder.Configuration.GetConnectionString("ConStr");
 builder.Services.AddDbContext<Contexto>(options => options.UseSqlite(ConStr));
+builder.Services.AddScoped<PrestamosService>();
 
 var app = builder.Build();
 
