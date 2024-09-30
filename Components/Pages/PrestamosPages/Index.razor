@@ -1,0 +1,162 @@
+﻿@page "/Prestamos/Index"
+@rendermode InteractiveServer
+@inject PrestamosService prestamosService
+@inject NavigationManager navigation
+
+<PageTitle>Prestamos</PageTitle>
+
+<div class="container">
+    <div class="card shadow-lg">
+
+        @*Titulo de la pagina*@
+        <div class="card-header text-center">
+            <h1>Registro de prestamos</h1>
+        </div>
+
+        @*Cuerpo de la página*@
+        <div class="card-body">
+            <div class="row mb-2 align-items-end">
+                @*Zona del filtro*@
+                <div class="row align-items-center">
+                    <div class="col-md-2">
+                        <label for="Filtro" class="form-label">Filtrar:</label>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="d-flex justify-content-end">
+                            <label for="TotalPrestamos" class="form-label">
+                                Prestamos totales: @ListaPrestamos.Count()
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                @*Selección de filtro*@
+                <div class="col-md-2">
+                    <select @bind="filtro" class="form-select">
+                        <option value="id">ID</option>
+                        <option value="deudor" selected>Deudor</option>
+                    </select>
+                </div>
+
+                @*Dato a buscar*@
+                <div class="col-md-5">
+                    <div class="input-group">
+                        <input @bind="valorFiltro" class="form-control" placeholder="Escribir aqui" />
+                        <button @onclick="Buscar" class="btn btn-outline-primary" type="button">
+                            <span class="bi bi-search"></span> Buscar
+                        </button>
+                    </div>
+                </div>
+
+                @*Restablecer tabla*@
+                <div class="col-md-3">
+                    <button class="btn btn-outline-secondary bi bi-arrow-clockwise" type="button"
+                            @onclick="OnInitializedAsync">
+                        Reiniciar todo
+                    </button>
+                </div>
+
+                @*Botón crear*@
+                <div class="col-md-2 text-end">
+                    <button class="btn btn-success bi bi-plus-square" type="button"
+                            @onclick="Crear">
+                        Crear
+                    </button>
+                </div>
+            </div>
+
+            @*Tabla con su lista*@
+            <table class="table table-bordered">
+                <thead class="bg-info text-center text-white">
+                    <tr>
+                        <th>ID</th>
+                        <th>Deudor</th>
+                        <th>Concepto</th>
+                        <th>Monto</th>
+                        <th>Detalles</th>
+                        <th>Editar</th>
+                        <th>Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var prestamo in ListaPrestamos)
+                    {
+                        <tr class="text-center">
+                            <td>@prestamo.PrestamosId</td>
+                            <td>@prestamo.Deudor</td>
+                            <td>@prestamo.Concepto</td>
+                            <td>@prestamo.Monto</td>
+                            <td>
+                                <button type="button" class="btn btn-outline-info bi bi-journal-text"
+                                        @onclick="()=>Detalles(prestamo.PrestamosId)"></button>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-outline-warning bi bi-pencil-square"
+                                        @onclick="()=>Editar(prestamo.PrestamosId)"></button>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-outline-danger bi bi-trash"
+                                        @onclick="()=>Eliminar(prestamo.PrestamosId)"></button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@code {
+    public List<Prestamos> ListaPrestamos = new List<Prestamos>();
+    private string filtro = "";
+    private string valorFiltro = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListaPrestamos = await prestamosService.Listar(p => true);
+        filtro = "deudor";
+        valorFiltro = "";
+    }
+
+    private async Task Buscar()
+    {
+        if (valorFiltro.Trim() != "")
+        {
+            if (filtro == "id" && int.TryParse(valorFiltro, out int prestamoId))
+            {
+                ListaPrestamos = await prestamosService.Listar(p => p.PrestamosId == prestamoId);
+            }
+            else if (filtro == "deudor")
+            {
+                ListaPrestamos = await prestamosService.Listar(p => p.Deudor
+                    .ToLower()
+                    .Contains(valorFiltro
+                    .ToLower()));
+            }
+        }
+        else
+        {
+            ListaPrestamos = await prestamosService.Listar(p => true);
+        }
+    }
+
+    public void Crear()
+    {
+        navigation.NavigateTo("/Prestamos/Create");
+    }
+
+    public void Detalles(int id)
+    {
+        navigation.NavigateTo($"/Prestamos/Details/=prestamosId{id}");
+    }
+
+    public void Editar(int id)
+    {
+        navigation.NavigateTo($"/Prestamos/Edit/=prestamosId{id}");
+    }
+
+    public void Eliminar(int id)
+    {
+        navigation.NavigateTo($"/Prestamos/Delete/=prestamosId{id}");
+    }
+}
