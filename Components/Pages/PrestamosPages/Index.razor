@@ -91,8 +91,10 @@
                                         @onclick="()=>Detalles(prestamo.PrestamosId)"></button>
                             </td>
                             <td>
-                                <button type="button" class="btn btn-outline-warning bi bi-pencil-square"
-                                        @onclick="()=>Editar(prestamo.PrestamosId)"></button>
+                                <button class="btn btn-warning bi bi-plus-square" type="button"
+                                        @onclick="()=>Editar(prestamo.PrestamosId)">
+                                    Editar
+                                </button>
                             </td>
                             <td>
                                 <button class="btn btn-danger bi bi-plus-square" type="button"
@@ -149,12 +151,12 @@
 
     public void Detalles(int id)
     {
-        navigation.NavigateTo($"/Prestamos/Details/=prestamosId={id}");
+        navigation.NavigateTo($"/Prestamos/Details/prestamosId={id}");
     }
 
     public void Editar(int id)
     {
-        navigation.NavigateTo($"/Prestamos/Edit/=prestamosId={id}");
+        navigation.NavigateTo($"/Prestamos/Edit/prestamosId={id}");
     }
 
     public void Eliminar(int id)
