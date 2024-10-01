@@ -1,5 +1,101 @@
-﻿<h3>Create</h3>
+﻿@page "/Prestamos/Create"
+@rendermode InteractiveServer
+@inject PrestamosService prestamosService
+@inject NavigationManager navigation
+
+<PageTitle>Crear prestamo</PageTitle>
+
+<EditForm Model="Prestamos" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+
+    <div class="container">
+        <div class="card shadow-lg">
+
+            @*Titulo de página*@
+            <div class="card-header text-center">
+                <h1>Crear prestamo</h1>
+            </div>
+
+            @*Vista general*@
+            <div class="card-body">
+                <div class="col-1">
+                    @*Id*@
+                    <label class="form-label" for="Id">Id:</label>
+                    <InputNumber id="Id" class="form-control text-center" readonly
+                                 @bind-Value="UltimoPrestamo">
+                    </InputNumber>
+                </div>
+                @*Deudor*@
+                <div class="row">
+                    <div class="col-4">
+                        <label class="form-label" for="Deudor">Deudor:</label>
+                        <InputText id="Deudor" class="form-control"
+                                   @bind-Value="Prestamos.Deudor" placeholder="Ej: Nombre Apellido Apellido">
+                        </InputText>
+                    </div>
+                </div>
+                @*Monto*@
+                <div class="row">
+                    <div class="col-4">
+                        <label class="form-label" for="Monto">Monto:</label>
+                        <InputNumber id="Monto" class="form-control"
+                                     @bind-Value="Prestamos.Monto">
+                        </InputNumber>
+                    </div>
+                </div>
+                @*Concepto*@
+                <div class="row">
+                    <div class="col-8">
+                        <label class="form-label" for="Concepto">Concepto:</label>
+                        <InputText id="Concepto" class="form-control"
+                                   @bind-Value="Prestamos.Concepto" placeholder="Va a comprar una casa...">
+                        </InputText>
+                    </div>
+                </div>
+            </div>
+
+            @*Navegacion*@
+            <div class="card-footer d-flex justify-content-center">
+                <button class="btn btn-outline-success" type="submit"
+                        style="margin-right: 10px;">
+                    Crear
+                </button>
+                <button class="btn btn-outline-secondary" type="button"
+                        @onclick="Volver">
+                    Volver
+                </button>
+            </div>
+        </div>
+    </div>
+</EditForm>
 
 @code {
+    public Prestamos? Prestamos { get; set; } = new Prestamos();
+    private int UltimoPrestamo;
 
+    protected override async Task OnInitializedAsync()
+    {
+        UltimoPrestamo = 1 + await prestamosService.UltimoId();
+    }
+
+    public async Task Guardar()
+    {
+        if (!await Validar())
+        {
+            var nuevo = await prestamosService.Guardar(Prestamos);
+            if (nuevo)
+            {
+                Prestamos = new Prestamos();
+                UltimoPrestamo = 1 + await prestamosService.UltimoId();
+            }
+        }
+    }
+
+    public async Task<bool> Validar()
+    {
+        var existe = await prestamosService.Existe(Prestamos.PrestamosId);
+        return existe;
+    }
+
+    public void Volver() => navigation.NavigateTo("/Prestamos/Index");
 }

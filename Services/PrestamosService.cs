@@ -12,7 +12,7 @@ public class PrestamosService
     {
         _contexto = contexto;
     }
-    private async Task<bool> Existe(int prestamosId)
+    public async Task<bool> Existe(int prestamosId)
     {
         return await _contexto.Prestamos
             .AnyAsync(p => p.PrestamosId == prestamosId);
