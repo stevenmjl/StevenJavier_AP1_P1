@@ -67,7 +67,7 @@
 
             @*Tabla con su lista*@
             <table class="table table-bordered">
-                <thead class="bg-info text-center text-white">
+                <thead class="text-center">
                     <tr>
                         <th>ID</th>
                         <th>Deudor</th>
@@ -95,8 +95,10 @@
                                         @onclick="()=>Editar(prestamo.PrestamosId)"></button>
                             </td>
                             <td>
-                                <button type="button" class="btn btn-outline-danger bi bi-trash"
-                                        @onclick="()=>Eliminar(prestamo.PrestamosId)"></button>
+                                <button class="btn btn-danger bi bi-plus-square" type="button"
+                                        @onclick="()=>Eliminar(prestamo.PrestamosId)">
+                                    Eliminar
+                                </button>
                             </td>
                         </tr>
                     }
@@ -147,16 +149,16 @@
 
     public void Detalles(int id)
     {
-        navigation.NavigateTo($"/Prestamos/Details/=prestamosId{id}");
+        navigation.NavigateTo($"/Prestamos/Details/=prestamosId={id}");
     }
 
     public void Editar(int id)
     {
-        navigation.NavigateTo($"/Prestamos/Edit/=prestamosId{id}");
+        navigation.NavigateTo($"/Prestamos/Edit/=prestamosId={id}");
     }
 
     public void Eliminar(int id)
     {
-        navigation.NavigateTo($"/Prestamos/Delete/=prestamosId{id}");
+        navigation.NavigateTo($"/Prestamos/Delete/prestamosId={id}");
     }
 }
