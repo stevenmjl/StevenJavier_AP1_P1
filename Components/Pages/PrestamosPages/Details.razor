@@ -1,5 +1,58 @@
-﻿<h3>Details</h3>
+﻿@page "/Prestamos/Details/prestamosId={idPrestamo:int}"
+@rendermode InteractiveServer
+@inject PrestamosService prestamosService
+@inject NavigationManager navigation
+
+<PageTitle>Detalles</PageTitle>
+
+<div class="container">
+    <div class="card shadow-lg">
+        @*Titulo de página*@
+        <div class="card-header text-center">
+            <h1>Detalles de prestamo</h1>
+        </div>
+
+        @*Cuerpo del registro*@
+        <div class="col 2">
+            <b>
+                ID: @Prestamos.PrestamosId
+            </b>
+        </div>
+        <div class="col 4">
+            <b>
+                Deudor: @Prestamos.Deudor
+            </b>
+        </div>
+        <div class="col 4">
+            <b>
+                Monto: @Prestamos.Monto
+            </b>
+        </div>
+        <div class="col 8">
+            <b>
+                Concepto: @Prestamos.Concepto
+            </b>
+        </div>
+
+        @*Navegacion*@
+        <div class="card-footer d-flex justify-content-center">
+            <button class="btn btn-outline-secondary" type="button"
+                    @onclick="Volver">
+                Volver
+            </button>
+        </div>
+    </div>
+</div>
 
 @code {
+    public Prestamos? Prestamos { get; set; } = new Prestamos();
+    [Parameter]
+    public int idPrestamo { get; set; }
 
+    protected override async Task OnInitializedAsync()
+    {
+        Prestamos = await prestamosService.BuscarId(idPrestamo);
+    }
+
+    public void Volver() => navigation.NavigateTo("/Prestamos/Index");
 }

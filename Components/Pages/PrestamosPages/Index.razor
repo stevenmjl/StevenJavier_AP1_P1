@@ -87,8 +87,10 @@
                             <td>@prestamo.Concepto</td>
                             <td>@prestamo.Monto</td>
                             <td>
-                                <button type="button" class="btn btn-outline-info bi bi-journal-text"
-                                        @onclick="()=>Detalles(prestamo.PrestamosId)"></button>
+                                <button class="btn btn-info bi bi-plus-square" type="button"
+                                        @onclick="()=>Detalles(prestamo.PrestamosId)">
+                                    Detalles
+                                </button>
                             </td>
                             <td>
                                 <button class="btn btn-warning bi bi-plus-square" type="button"
