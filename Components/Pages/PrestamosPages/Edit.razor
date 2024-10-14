@@ -83,19 +83,9 @@
 
     public async Task Editar()
     {
-        if (!await Validar())
-        {
-            var editado = await prestamosService.Guardar(Prestamos);
-            if (editado)
-            {
+        var editado = await prestamosService.Guardar(Prestamos);
+        Volver();
+    }
 
-            }
-        }
-    }
-    public async Task<bool> Validar()
-    {
-        var existe = await prestamosService.Existe(Prestamos.PrestamosId);
-        return existe;
-    }
     public void Volver() => navigation.NavigateTo("/Prestamos/Index");
 }
